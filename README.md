@@ -16,21 +16,22 @@ database for 3 hours.
 
 ## Usage
 
-### Deploy on HPE Helion Stackato
+### Deploy on SUSE Cloud Application Platform
 
     Server side:
-    $ kato role add redis # if not present
+    TODO:
+    Link to minibroker & redis deployment
 
     Client side:
-    $ stackato push -n
+    $ cf push
 
 Then open application in a browser.
 
-    $ stackato open
+    ~~$ stackato open~~
 
-### Without HPE Helion Stackato
+### Without SUSE Cloud Application Platform
 
-It is possible to run the app without HPE Helion Stackato, if necessary.
+It is possible to run the app without SUSE Cloud Application Platform, if necessary.
 
  1. Install and start Redis database, see http://redis.io for details
 
