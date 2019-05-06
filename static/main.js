@@ -115,7 +115,7 @@ $(function() {
 	return self;
     }
 
-    init_block('right', 'USD')
+    init_block('right', 'EUR')
     init_block('left', 'CAD', 1.0);
 
     $('.left input[name=amount]').focus();
