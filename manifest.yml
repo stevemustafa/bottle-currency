@@ -2,7 +2,8 @@ applications:
 - name: currency
   memory: 128M
   disk_quota: 256M
-  buildpack: python_buildpack
+  buildpacks: 
+   - python_buildpack
   instances: 4
   services:
-   - currency-redis
+   - currency
