@@ -4,7 +4,7 @@ COPY . /src
 
 #ENV DEBIAN_FRONTEND noninteractive
 
-RUN cd /src && sudo yum update -y && pip3 install -U pip && pip3 install -r requirements.txt
+RUN cd /src && pip3 install -U pip && pip3 install -r requirements.txt
 
 EXPOSE 8000
 
