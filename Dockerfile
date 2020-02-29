@@ -1,4 +1,4 @@
-
+FROM amazonlinux:2
 
 COPY . /src
 
