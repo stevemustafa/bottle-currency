@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      # python: 3.8
+      docker: 18
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region us-east-1)
+  build:
+    commands:
+      - echo Starting build phase
+      - pip3 install -r requirements.txt
+      - docker build -t sm-ecr-repo .
+      - docker tag sm-ecr-repo:latest 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image to ECR...
+      - docker push 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo:latest
