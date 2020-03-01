@@ -9,18 +9,18 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
-      - #$(aws ecr get-login --region us-east-1 --no-include-email)
+      # - $(aws ecr get-login --region us-east-1 --no-include-email)
       - REPOSITORY_URI=334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
-      -- echo REPOSITORY_URI.. $REPOSITORY_URI
-      -- echo COMMIT_HASH.. $COMMIT_HASH
-      -- echo IMAGE_TAG.. $IMAGE_TAG
+      - echo REPOSITORY_URI.. $REPOSITORY_URI
+      - echo COMMIT_HASH.. $COMMIT_HASH
+      - echo IMAGE_TAG.. $IMAGE_TAG
 
       # - echo Logging in to Amazon ECR...
       # - aws ecr get-login-password | docker login --username AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo --no-include-email --region us-east-1
       # - eval $(aws ecr get-login | sed 's|https://||')
-      -- aws ecr get-authorization-token --region us-east-1 --output text --query authorizationData[].authorizationToken | base64 -D | cut -d':' -f2 | docker login --username AWS --password-stdin https://334033517520.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-authorization-token --region us-east-1 --output text --query authorizationData[].authorizationToken | base64 -D | cut -d':' -f2 | docker login --username AWS --password-stdin https://334033517520.dkr.ecr.us-east-1.amazonaws.com
   build:
     commands:
       - echo Starting build phase
