@@ -20,7 +20,7 @@ phases:
       # - echo Logging in to Amazon ECR...
       # - aws ecr get-login-password | docker login --username AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo --no-include-email --region us-east-1
       # - eval $(aws ecr get-login | sed 's|https://||')
-      # - aws ecr get-authorization-token --region us-east-1 --output text --query authorizationData[].authorizationToken | base64 -D | cut -d':' -f2 | docker login --username AWS --password-stdin https://334033517520.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region us-east-1 | docker login -u AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo
   build:
     commands:
       - echo Starting build phase
@@ -32,4 +32,4 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker image to ECR...
       #- docker push https://334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo:latest
-      - aws ecr get-authorization-token --region us-east-1 --output text --query authorizationData[].authorizationToken | base64 -D | cut -d':' -f2 | docker login --username AWS --password-stdin https://334033517520.dkr.ecr.us-east-1.amazonaws.com | docker push $REPOSITORY_URI:latest
+      - aws ecr get-login-password --region us-east-1 | docker login -u AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo | docker push $REPOSITORY_URI:latest
