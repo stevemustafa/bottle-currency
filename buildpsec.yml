@@ -18,8 +18,9 @@ phases:
       -- echo IMAGE_TAG.. $IMAGE_TAG
 
       # - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password | docker login --username AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo --no-include-email --region us-east-1
+      # - aws ecr get-login-password | docker login --username AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo --no-include-email --region us-east-1
       # - eval $(aws ecr get-login | sed 's|https://||')
+      -- aws ecr get-authorization-token --region us-east-1 | docker login --username AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo
   build:
     commands:
       - echo Starting build phase
