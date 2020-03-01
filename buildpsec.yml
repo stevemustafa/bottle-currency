@@ -9,6 +9,7 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password | docker login --username AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo
+      - eval $(aws ecr get-login | sed 's|https://||')
   build:
     commands:
       - echo Starting build phase
