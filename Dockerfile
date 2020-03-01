@@ -4,7 +4,7 @@ COPY . /src
 
 #ENV DEBIAN_FRONTEND noninteractive
 
-RUN cd /src && pip install -U pip && pip install -r requirements.txt
+RUN cd /src 
 
 EXPOSE 8000
 
