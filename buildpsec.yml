@@ -20,4 +20,4 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image to ECR...
-      - docker push 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo:latest
+      - docker push https://334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo:latest
