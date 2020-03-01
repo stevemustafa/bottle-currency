@@ -8,16 +8,24 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password | docker login --username AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo --no-include-email --region us-east-1
-      - eval $(aws ecr get-login | sed 's|https://||')
+      - aws --version
+      - $(aws ecr get-login --region us-east-1 --no-include-email)
+      - REPOSITORY_URI=334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+
+      # - echo Logging in to Amazon ECR...
+      # - aws ecr get-login-password | docker login --username AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo --no-include-email --region us-east-1
+      # - eval $(aws ecr get-login | sed 's|https://||')
   build:
     commands:
       - echo Starting build phase
       - pip3 install -r requirements.txt
-      - docker build -t sm-ecr-repo .
-      - docker tag sm-ecr-repo:latest 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo:latest
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image to ECR...
-      - docker push https://334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo:latest
+      #- docker push https://334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo:latest
+      - docker push $REPOSITORY_URI:latest
