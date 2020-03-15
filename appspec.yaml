@@ -1,5 +1,4 @@
 version: 0.0
-os: linux
 Resources:
   - TargetService:
       Type: AWS::ECS::Service
@@ -8,3 +7,10 @@ Resources:
         LoadBalancerInfo:
           ContainerName: "sample-website"
           ContainerPort: 80
+# Optional properties
+        PlatformVersion: "LATEST"
+        NetworkConfiguration:
+            AwsvpcConfiguration:
+              Subnets: ["subnet-1412375c", "subnet-f4b225ae"]
+              SecurityGroups: ["sg-4b5a7e02"]
+              AssignPublicIp: "ENABLED"
