@@ -37,3 +37,8 @@ phases:
       # - aws ecr get-login-password --region us-east-1 | docker login -u AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo | docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
+        # Write artifact
+      - printf '[{"name":"MyECSContainer","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+
+artifacts:
+    files: imagedefinitions.json
