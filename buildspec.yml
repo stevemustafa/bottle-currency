@@ -1,44 +1,29 @@
-version: 0.2
-
-phases:
-  install:
-    runtime-versions:
-      # python: 3.8
+--- 
+artifacts: 
+  files: imagedefinitions.json
+phases: 
+  build: 
+    commands: 
+      - "echo Starting build phase"
+      - "pip3 install -r requirements.txt"
+      - "docker build -t $REPOSITORY_URI:latest ."
+      - "docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG"
+  install: 
+    runtime-versions: 
       docker: 18
-  pre_build:
-    commands:
-      - echo Logging in to Amazon ECR...
-      - aws --version
-      # - $(aws ecr get-login --region us-east-1 --no-include-email)
-      # - REPOSITORY_URI=334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo
+  post_build: 
+    commands: 
+      - "echo Build completed on `date`"
+      - "echo Pushing the Docker image to ECR..."
+      - "docker push $REPOSITORY_URI:latest"
+      - "docker push $REPOSITORY_URI:$IMAGE_TAG"
+      - "printf '[{\"name\":\"MyECSContainer\",\"imageUri\":\"%s\"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json"
+  pre_build: 
+    commands: 
+      - "echo Logging in to Amazon ECR..."
+      - "aws --version"
       - REPOSITORY_URI=334033517520.dkr.ecr.eu-west-1.amazonaws.com/sm-mb-ecr-repo
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
-
-      # - echo Logging in to Amazon ECR...
-      # - aws ecr get-login-password | docker login --username AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo --no-include-email --region us-east-1
-      # - eval $(aws ecr get-login | sed 's|https://||')
-      # - aws ecr get-login-password --region us-east-1 | docker login -u AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo
-      # - aws ecr get-login-password | docker login --username AWS --password-stdin 334033517520.dkr.ecr.eu-west-1.amazonaws.com/sm-mb-ecr-repo
-      # - aws ecr get-login-password --region eu-west-1
-      - $(aws ecr get-login --no-include-email --region eu-west-1)
-  build:
-    commands:
-      - echo Starting build phase
-      - pip3 install -r requirements.txt
-      # - docker build -t $REPOSITORY_URI:latest .
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-  post_build:
-    commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image to ECR...
-      #- docker push https://334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo:latest
-      # - aws ecr get-login-password --region us-east-1 | docker login -u AWS --password-stdin 334033517520.dkr.ecr.us-east-1.amazonaws.com/sm-ecr-repo | docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-        # Write artifact
-      - printf '[{"name":"MyECSContainer","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-
-artifacts:
-    files: imagedefinitions.json
+      - "COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)"
+      - "IMAGE_TAG=${COMMIT_HASH:=latest}"
+      - "$(aws ecr get-login --no-include-email --region eu-west-1)"
+version: 0.2
